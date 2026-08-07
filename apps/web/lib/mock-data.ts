@@ -1,4 +1,4 @@
-export type MilestoneStatus = "released" | "in_escrow" | "pending";
+export type MilestoneStatus = "released" | "confirmed" | "in_escrow" | "pending";
 
 export type Milestone = {
   id: string;

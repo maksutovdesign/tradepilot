@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../../db";
-import { MILESTONE_SPLIT } from "@tradepilot/config";
 import { transferUsdc } from "../../integrations/circle/client";
+
+const MILESTONE_SPLIT = { order: 30, shipment: 40, delivery: 30 } as const;
 
 export const tradesRouter = Router();
 
@@ -108,6 +109,42 @@ tradesRouter.post("/:id/fund", async (req, res) => {
 });
 
 /**
+ * Confirm that a milestone's condition has been met (mirrors the escrow
+ * contract's confirmMilestone step). This does not move funds — it only
+ * marks the milestone eligible for release, matching TradePilotEscrow's
+ * two-phase confirm/release design.
+ */
+tradesRouter.post("/:id/milestones/:milestoneId/confirm", async (req, res) => {
+  const milestone = await prisma.milestone.findUnique({
+    where: { id: req.params.milestoneId },
+  });
+  if (!milestone || milestone.tradeId !== req.params.id) {
+    return res.status(404).json({ error: "Milestone not found" });
+  }
+  if (milestone.status !== "IN_ESCROW") {
+    return res.status(409).json({ error: "Milestone is not awaiting confirmation" });
+  }
+
+  const updated = await prisma.milestone.update({
+    where: { id: milestone.id },
+    data: { status: "CONFIRMED" },
+  });
+
+  await prisma.agentAction.create({
+    data: {
+      tradeId: req.params.id,
+      type: "CONFIRM_MILESTONE",
+      description: `${milestone.label} condition confirmed`,
+      amount: milestone.amount,
+      status: "EXECUTED",
+      requiresApproval: false,
+    },
+  });
+
+  res.json({ milestone: updated });
+});
+
+/**
  * Release the next eligible milestone. This is the endpoint the AI Agent
  * calls after the user approves its recommendation. It never signs a
  * transaction itself — it only requests the Circle developer-controlled
@@ -126,8 +163,8 @@ tradesRouter.post("/:id/milestones/:milestoneId/release", async (req, res) => {
   if (!milestone || milestone.tradeId !== req.params.id) {
     return res.status(404).json({ error: "Milestone not found" });
   }
-  if (milestone.status !== "IN_ESCROW") {
-    return res.status(409).json({ error: "Milestone is not eligible for release" });
+  if (milestone.status !== "CONFIRMED") {
+    return res.status(409).json({ error: "Milestone must be confirmed before release" });
   }
 
   let txHash: string | undefined;
@@ -144,6 +181,18 @@ tradesRouter.post("/:id/milestones/:milestoneId/release", async (req, res) => {
       return res.status(502).json({ error: `Circle transfer failed: ${(err as Error).message}` });
     }
   }
+
+  await prisma.agentAction.create({
+    data: {
+      tradeId: req.params.id,
+      type: "RELEASE_MILESTONE",
+      description: `Release ${milestone.label} to supplier`,
+      amount: milestone.amount,
+      status: "EXECUTED",
+      requiresApproval: true,
+      transactionHash: txHash,
+    },
+  });
 
   await prisma.milestone.update({
     where: { id: milestone.id },

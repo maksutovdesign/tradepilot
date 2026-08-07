@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../../db";
-import { extractInvoiceData } from "../../integrations/ai/client";
+import { extractInvoiceData, extractInvoiceDataHeuristically } from "../../integrations/ai/client";
 
 export const invoicesRouter = Router();
 
@@ -47,10 +47,25 @@ invoicesRouter.post("/", async (req, res) => {
     });
     return res.status(201).json({ invoice: updated, extraction });
   } catch (err) {
-    // AI extraction is best-effort — the invoice still exists for manual review.
+    // OpenAI is best-effort — fall back to a regex-based reading of the same
+    // invoice text so the workflow still produces a usable trade proposal.
+    const extraction = extractInvoiceDataHeuristically(rawText);
+    const updated = await prisma.invoice.update({
+      where: { id: invoice.id },
+      data: {
+        supplierName: extraction.supplierName,
+        amount: extraction.amount,
+        currency: extraction.currency,
+        paymentTerms: extraction.paymentTerms,
+        aiRiskScore: extraction.riskScore,
+        aiRecommendation: extraction.recommendation,
+        status: "ANALYZED",
+      },
+    });
     return res.status(201).json({
-      invoice,
-      warning: `AI extraction failed: ${(err as Error).message}`,
+      invoice: updated,
+      extraction,
+      warning: `AI extraction unavailable, used heuristic fallback: ${(err as Error).message}`,
     });
   }
 });

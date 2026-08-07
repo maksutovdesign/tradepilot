@@ -39,7 +39,7 @@ export interface ApiMilestone {
   amount: string;
   sharePercent: number;
   condition: string;
-  status: "PENDING" | "IN_ESCROW" | "RELEASED";
+  status: "PENDING" | "IN_ESCROW" | "CONFIRMED" | "RELEASED";
   releasedAt: string | null;
 }
 
@@ -69,6 +69,21 @@ export async function listTrades(buyerId: string) {
 export async function getTrade(id: string) {
   const { trade } = await apiFetch<{ trade: ApiTrade }>(`/trades/${id}`);
   return trade;
+}
+
+export async function fundTrade(tradeId: string) {
+  const { trade } = await apiFetch<{ trade: ApiTrade }>(`/trades/${tradeId}/fund`, {
+    method: "POST",
+    body: JSON.stringify({ contractAddress: "0xc46673b16c94d2898c59aeaa0fd588f2af13792f" }),
+  });
+  return trade;
+}
+
+export async function confirmMilestone(tradeId: string, milestoneId: string) {
+  return apiFetch<{ milestone: ApiMilestone }>(
+    `/trades/${tradeId}/milestones/${milestoneId}/confirm`,
+    { method: "POST", body: JSON.stringify({}) }
+  );
 }
 
 export async function releaseMilestone(tradeId: string, milestoneId: string) {

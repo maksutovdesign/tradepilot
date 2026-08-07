@@ -17,6 +17,7 @@ import {
 const API_STATUS_MAP: Record<string, MilestoneStatus> = {
   PENDING: "pending",
   IN_ESCROW: "in_escrow",
+  CONFIRMED: "confirmed",
   RELEASED: "released",
 };
 
