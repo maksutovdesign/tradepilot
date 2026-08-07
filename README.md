@@ -11,6 +11,8 @@ Every completed trade contributes to a verifiable SME Credit Passport.
 Built for the **Ignyte Stablecoins Commerce Stack Challenge** — Track 2: Best
 SME Trade Finance & Working Capital Workflow.
 
+**Live demo**: [web-psi-rose-15.vercel.app](https://web-psi-rose-15.vercel.app) — fully wired to a live Postgres database, Circle developer-controlled wallet, and an escrow contract deployed on Arc Testnet ([`api-sigma-hazel-15.vercel.app`](https://api-sigma-hazel-15.vercel.app) for the API).
+
 ## Why this exists
 
 International SME trade still runs on trust-first, paperwork-heavy rails:
