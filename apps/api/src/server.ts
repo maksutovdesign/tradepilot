@@ -1,4 +1,4 @@
-import { app } from "./app";
+import { app } from "./expressApp";
 
 const port = Number(process.env.PORT ?? 4000);
 app.listen(port, () => {

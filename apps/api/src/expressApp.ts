@@ -36,3 +36,9 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   console.error(err);
   res.status(500).json({ error: "Internal server error" });
 });
+
+// Also exported as default: if a platform's zero-config Express detection
+// ever picks this file up directly as a serverless entrypoint (it shouldn't
+// — see vercel.json's "framework": null — but did once), a default export
+// keeps it a valid handler instead of crashing on "invalid export".
+export default app;
