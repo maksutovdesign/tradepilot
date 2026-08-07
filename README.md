@@ -50,6 +50,12 @@ See [docs/architecture.md](docs/architecture.md) for the full data flow and the 
 
 ## Getting started
 
+**Want to just try it?** Open the live demo — no setup required:
+[web-psi-rose-15.vercel.app](https://web-psi-rose-15.vercel.app)
+
+The steps below are only for running TradePilot locally (e.g. to modify the
+code or point it at your own Circle/Arc/database credentials).
+
 ### 1. Install dependencies
 
 ```bash
@@ -95,7 +101,13 @@ Copy the deployed address into `ESCROW_ADDRESS`.
 
 **Already deployed on Arc Testnet**: [`0xc46673b16c94d2898c59aeaa0fd588f2af13792f`](https://testnet.arcscan.app/address/0xc46673b16c94d2898c59aeaa0fd588f2af13792f) — a full create → fund → confirm → release cycle has been run against it live (see `docs/demo.md` for transaction hashes).
 
-### 5. Run the app
+### 5. Run the app locally (optional)
+
+The steps above are only needed if you want to run TradePilot on your own
+machine — for example to modify the code or point it at your own Circle/Arc
+credentials. **To just try the product, skip straight to the live demo
+link at the top of this README** — it already runs against a live database,
+Circle wallet, and the deployed Arc contract.
 
 ```bash
 pnpm dev
