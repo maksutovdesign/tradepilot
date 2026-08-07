@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id            String         @id @default(cuid())
+  name          String
+  createdAt     DateTime       @default(now())
+  users         User[]
+  wallets       Wallet[]
+  invoices      Invoice[]
+  tradesAsBuyer Trade[]        @relation("BuyerTrades")
+  creditEvents  CreditEvent[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum WalletAccountType {
+  EOA
+  SCA
+}
+
+model Wallet {
+  id             String            @id @default(cuid())
+  companyId      String
+  company        Company           @relation(fields: [companyId], references: [id])
+  circleWalletId String            @unique
+  address        String
+  accountType    WalletAccountType @default(EOA)
+  blockchain     String            @default("ARC-TESTNET")
+  createdAt      DateTime          @default(now())
+  transactions   Transaction[]
+}
+
+enum InvoiceStatus {
+  UPLOADED
+  ANALYZING
+  ANALYZED
+  APPROVED
+  TRADE_CREATED
+  SETTLED
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  companyId         String
+  company           Company       @relation(fields: [companyId], references: [id])
+  supplierName      String
+  supplierWallet    String?
+  invoiceNumber     String
+  amount            Decimal
+  currency          String        @default("USD")
+  dueDate           DateTime?
+  paymentTerms      String
+  documentUrl       String?
+  aiRiskScore       String?
+  aiRecommendation  String?
+  status            InvoiceStatus @default(UPLOADED)
+  createdAt         DateTime      @default(now())
+  trade             Trade?
+}
+
+enum TradeStatus {
+  DRAFT
+  AWAITING_FUNDING
+  FUNDED
+  IN_PROGRESS
+  COMPLETED
+  DISPUTED
+  REFUNDED
+}
+
+model Trade {
+  id               String        @id @default(cuid())
+  invoiceId        String        @unique
+  invoice          Invoice       @relation(fields: [invoiceId], references: [id])
+  buyerId          String
+  buyer            Company       @relation("BuyerTrades", fields: [buyerId], references: [id])
+  supplierName     String
+  contractAddress  String?
+  onchainTradeId   String?
+  totalAmount      Decimal
+  releasedAmount   Decimal       @default(0)
+  status           TradeStatus   @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  completedAt      DateTime?
+  milestones       Milestone[]
+  transactions     Transaction[]
+  agentActions      AgentAction[]
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_ESCROW
+  RELEASED
+}
+
+model Milestone {
+  id          String          @id @default(cuid())
+  tradeId     String
+  trade       Trade           @relation(fields: [tradeId], references: [id])
+  label       String
+  amount      Decimal
+  sharePercent Int
+  condition   String
+  status      MilestoneStatus @default(PENDING)
+  releasedAt  DateTime?
+  createdAt   DateTime        @default(now())
+}
+
+enum TransactionDirection {
+  IN
+  OUT
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model Transaction {
+  id        String                @id @default(cuid())
+  tradeId   String?
+  trade     Trade?                @relation(fields: [tradeId], references: [id])
+  walletId  String
+  wallet    Wallet                @relation(fields: [walletId], references: [id])
+  amount    Decimal
+  direction TransactionDirection
+  txHash    String?
+  status    TransactionStatus     @default(PENDING)
+  createdAt DateTime              @default(now())
+}
+
+enum AgentActionType {
+  CREATE_ESCROW
+  CONFIRM_MILESTONE
+  RELEASE_MILESTONE
+  RAISE_DISPUTE
+}
+
+enum AgentActionStatus {
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  EXECUTED
+  FAILED
+}
+
+model AgentAction {
+  id                String            @id @default(cuid())
+  tradeId           String
+  trade             Trade             @relation(fields: [tradeId], references: [id])
+  type              AgentActionType
+  description       String
+  amount            Decimal?
+  status            AgentActionStatus @default(PENDING_APPROVAL)
+  requiresApproval  Boolean           @default(true)
+  transactionHash   String?
+  createdAt         DateTime          @default(now())
+}
+
+model CreditEvent {
+  id          String   @id @default(cuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  label       String
+  amount      Decimal
+  onTime      Boolean
+  createdAt   DateTime @default(now())
+}

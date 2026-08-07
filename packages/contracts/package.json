@@ -1,0 +1,9 @@
+{
+  "name": "@tradepilot/contracts",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test"
+  }
+}
