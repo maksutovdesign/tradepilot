@@ -1,0 +1,71 @@
+<svg viewBox="0 0 980 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TradePilot system architecture: browser talks to the Next.js web app, which calls the Express API; the API reads and writes trade state in Postgres, asks Circle to sign a USDC transfer, and reads trade state from the TradePilotEscrow contract on Arc; Circle's signed transaction is broadcast to Arc, which releases USDC to the supplier wallet.">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1C1F26"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563EB"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="620" fill="#FFFFFF"/>
+
+  <!-- Browser -->
+  <rect x="390" y="24" width="200" height="52" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="490" y="55" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">SME User (Browser)</text>
+
+  <!-- Web -->
+  <rect x="370" y="122" width="240" height="56" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="490" y="148" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">TradePilot Web</text>
+  <text x="490" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">Next.js — Vercel</text>
+
+  <line x1="490" y1="76" x2="490" y2="122" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="502" y="103" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">HTTPS</text>
+
+  <!-- API -->
+  <rect x="370" y="222" width="240" height="56" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="490" y="248" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">TradePilot API</text>
+  <text x="490" y="266" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">Express — Vercel serverless</text>
+
+  <line x1="490" y1="178" x2="490" y2="222" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="512" y="203" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">REST fetch</text>
+
+  <!-- Three destinations -->
+  <rect x="60" y="340" width="230" height="72" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="175" y="368" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">PostgreSQL</text>
+  <text x="175" y="386" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">Neon</text>
+  <text x="175" y="402" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">Trade / Milestone / Invoice state</text>
+
+  <rect x="375" y="340" width="230" height="72" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="490" y="368" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">Circle Wallets</text>
+  <text x="490" y="386" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">Developer-Controlled</text>
+  <text x="490" y="402" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">signs USDC transfers</text>
+
+  <rect x="690" y="340" width="230" height="72" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="805" y="368" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">Arc Testnet</text>
+  <text x="805" y="386" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">TradePilotEscrow.sol</text>
+  <text x="805" y="402" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">0xc46673b1…3792f</text>
+
+  <line x1="440" y1="278" x2="200" y2="340" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="230" y="315" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">reads / writes state</text>
+
+  <line x1="490" y1="278" x2="490" y2="340" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="502" y="312" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">requests transfer</text>
+
+  <line x1="540" y1="278" x2="770" y2="340" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="640" y="315" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">reads onchain trade (viem)</text>
+
+  <!-- Circle -> Arc -->
+  <line x1="605" y1="376" x2="690" y2="376" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowAccent)"/>
+  <text x="600" y="360" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#2563EB" font-weight="600">signs &amp; broadcasts tx</text>
+
+  <!-- Arc -> Supplier -->
+  <rect x="690" y="500" width="230" height="60" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="805" y="526" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">Supplier Wallet</text>
+  <text x="805" y="544" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">receives milestone USDC</text>
+
+  <line x1="805" y1="412" x2="805" y2="500" stroke="#2563EB" stroke-width="2" marker-end="url(#arrowAccent)"/>
+  <text x="817" y="460" font-family="ui-sans-serif,system-ui" font-size="11" fill="#2563EB" font-weight="600">releases USDC on confirm</text>
+
+  <text x="16" y="600" font-family="ui-sans-serif,system-ui" font-size="12" fill="#94A3B8">Blue arrows: the actual USDC settlement path. Black arrows: application-layer reads/writes.</text>
+</svg>

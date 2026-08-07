@@ -34,6 +34,12 @@ packages/
 docs/         Architecture, smart contract, Circle integration, agent, demo
 ```
 
+## Architecture
+
+![TradePilot system architecture](docs/diagrams/system-architecture.svg)
+
+See [docs/architecture.md](docs/architecture.md) for the full data flow and the AI agent's trust boundary.
+
 ## Stack
 
 - **Frontend**: Next.js, TypeScript, Tailwind

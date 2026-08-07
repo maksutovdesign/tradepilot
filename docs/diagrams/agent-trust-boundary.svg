@@ -1,0 +1,47 @@
+<svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trust boundary: the AI agent can only create a pending AgentAction row; it has no code path to sign a transaction. A human must approve that row before the trade or milestone endpoint calls Circle, which is the only component that ever signs and broadcasts to Arc.">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1C1F26"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="300" fill="#FFFFFF"/>
+
+  <!-- AI Agent -->
+  <rect x="20" y="110" width="190" height="70" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="115" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">AI Agent</text>
+  <text x="115" y="158" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">reads invoice, drafts plan</text>
+
+  <line x1="210" y1="145" x2="290" y2="145" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <text x="250" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">writes</text>
+
+  <!-- AgentAction row -->
+  <rect x="290" y="105" width="220" height="80" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="1.5"/>
+  <text x="400" y="132" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="600" fill="#92400E">AgentAction row</text>
+  <text x="400" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#92400E">status:</text>
+  <text x="400" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700" fill="#92400E">PENDING_APPROVAL</text>
+
+  <line x1="510" y1="145" x2="590" y2="145" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <text x="550" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">reviews</text>
+
+  <!-- Human -->
+  <rect x="590" y="110" width="150" height="70" rx="10" fill="#F8FAFC" stroke="#1C1F26" stroke-width="1.5"/>
+  <text x="665" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="14" font-weight="600" fill="#0B1D3A">Human</text>
+  <text x="665" y="158" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">clicks Approve</text>
+
+  <line x1="740" y1="145" x2="820" y2="145" stroke="#1C1F26" stroke-width="1.5" marker-end="url(#arrow2)"/>
+  <text x="780" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#475569">unlocks</text>
+
+  <!-- Trade/Milestone endpoint -->
+  <rect x="820" y="90" width="140" height="110" rx="10" fill="#F0FDF4" stroke="#16A34A" stroke-width="1.5"/>
+  <text x="890" y="118" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="600" fill="#166534">Trade / Milestone</text>
+  <text x="890" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="600" fill="#166534">endpoint</text>
+  <text x="890" y="156" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#166534">only this calls</text>
+  <text x="890" y="172" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#166534">Circle to sign + Arc</text>
+
+  <!-- forbidden path -->
+  <path d="M 115 110 C 115 40, 890 40, 890 88" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrow2)"/>
+  <text x="500" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="600" fill="#DC2626">no code path — agent can never call this directly</text>
+
+  <text x="16" y="270" font-family="ui-sans-serif,system-ui" font-size="12" fill="#94A3B8">Solid arrows: the only path funds can move. Dashed red: what the agent is structurally prevented from doing.</text>
+</svg>

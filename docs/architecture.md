@@ -1,5 +1,7 @@
 # Architecture
 
+![TradePilot system architecture](diagrams/system-architecture.svg)
+
 ```text
                          ┌──────────────────────┐
                          │        USER           │
@@ -41,6 +43,8 @@
 ```
 
 ## Trust boundary (why the AI agent can't move funds directly)
+
+![Agent trust boundary](diagrams/agent-trust-boundary.svg)
 
 ```text
 AI Agent  --proposes-->  AgentAction (PENDING_APPROVAL)
